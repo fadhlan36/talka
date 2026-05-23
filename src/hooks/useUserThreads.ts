@@ -14,7 +14,7 @@ export function useUserThreads(userId?: number) {
             try {
                 setLoading(true);
                 const res = await axios.get(
-                    `http://localhost:5000/api/v1/thread/user/${userId}`,
+                    `${import.meta.env.VITE_API_URL}/api/v1/thread/user/${userId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setThreads(res.data);

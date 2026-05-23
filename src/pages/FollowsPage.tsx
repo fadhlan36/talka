@@ -74,7 +74,7 @@ export default function FollowsPage() {
                       <img
                         src={
                           u.avatar
-                            ? `http://localhost:5000/uploads/${u.avatar}`
+                            ? `${import.meta.env.VITE_API_URL}/uploads/${u.avatar}`
                             : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.username}`
                         }
                         alt={u.username}

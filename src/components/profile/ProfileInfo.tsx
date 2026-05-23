@@ -37,19 +37,24 @@ export default function ProfileInfo({
     }
   }, [user?.id, isOwnProfile]);
 
-  // Filter threads yang punya gambar untuk tab Media
   const mediaThreads = threads.filter((t) => t.image);
 
   return (
-    <div>
+    <div className="px-4 md:px-8">
       {/* ================= HEADER ================= */}
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h2 className="text-2xl font-bold">{user?.full_name}</h2>
-          <p className="text-zinc-500">@{user?.username}</p>
-          <p className="mt-3 text-zinc-300">{user?.bio || "No bio yet."}</p>
+      <div className="flex justify-between items-start mb-6 gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl md:text-2xl font-bold truncate">
+            {user?.full_name}
+          </h2>
+          <p className="text-zinc-500 text-sm md:text-base truncate">
+            @{user?.username}
+          </p>
+          <p className="mt-3 text-zinc-300 text-sm md:text-base break-words">
+            {user?.bio || "No bio yet."}
+          </p>
 
-          <div className="flex gap-5 mt-4 text-sm">
+          <div className="flex gap-5 mt-4 text-xs md:text-sm">
             <span
               onClick={onOpenFollowing}
               className="cursor-pointer hover:underline text-zinc-400"
@@ -65,11 +70,11 @@ export default function ProfileInfo({
           </div>
         </div>
 
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-zinc-800">
+        <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden bg-zinc-800 shrink-0">
           <img
             src={
               user?.photo_profile
-                ? `http://localhost:5000/uploads/${user.photo_profile}`
+                ? `${import.meta.env.VITE_API_URL}/uploads/${user.photo_profile}`
                 : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}`
             }
             className="w-full h-full object-cover"
@@ -82,7 +87,7 @@ export default function ProfileInfo({
         <Button
           onClick={onEdit}
           variant="outline"
-          className="w-full rounded-full border-zinc-700 mb-6 hover:bg-zinc-800 transition"
+          className="w-full rounded-full border-zinc-700 mb-6 hover:bg-zinc-800 transition h-10 font-semibold"
         >
           Edit profile
         </Button>
@@ -93,7 +98,7 @@ export default function ProfileInfo({
           }
           disabled={followLoading}
           variant={isFollowing ? "outline" : "default"}
-          className={`w-full rounded-full mb-6 transition ${
+          className={`w-full rounded-full mb-6 transition h-10 font-semibold ${
             isFollowing
               ? "border-zinc-700 hover:bg-zinc-800 hover:text-red-400 hover:border-red-400"
               : "bg-white text-black hover:bg-zinc-200"
@@ -104,7 +109,7 @@ export default function ProfileInfo({
       )}
 
       {/* ================= TABS ================= */}
-      <div className="flex border-b border-zinc-900">
+      <div className="flex border-b border-zinc-900 -mx-4 md:mx-0">
         <button
           onClick={() => setActiveTab("threads")}
           className={`flex-1 py-3 text-sm font-semibold transition ${
@@ -129,9 +134,8 @@ export default function ProfileInfo({
 
       {/* ================= CONTENT ================= */}
       <div className="mt-2">
-        {/* TAB THREADS */}
         {activeTab === "threads" && (
-          <>
+          <div className="-mx-4 md:mx-0">
             {threadsLoading ? (
               <div className="py-6 text-zinc-500 italic text-sm text-center">
                 Memuat postingan...
@@ -145,14 +149,14 @@ export default function ProfileInfo({
                 <div
                   key={thread.id}
                   onClick={() => navigate(`/thread/${thread.id}`)}
-                  className="border-b border-zinc-900 px-2 py-4 hover:bg-zinc-950/50 cursor-pointer transition"
+                  className="border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950/50 cursor-pointer transition"
                 >
                   <div className="flex gap-3">
                     <div className="w-10 h-10 rounded-full bg-zinc-800 overflow-hidden shrink-0">
                       <img
                         src={
                           thread.avatar
-                            ? `http://localhost:5000/uploads/${thread.avatar}`
+                            ? `${import.meta.env.VITE_API_URL}/uploads/${thread.avatar}`
                             : `https://api.dicebear.com/7.x/avataaars/svg?seed=${thread.username}`
                         }
                         className="w-full h-full object-cover"
@@ -160,21 +164,21 @@ export default function ProfileInfo({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-white text-sm">
+                        <span className="font-bold text-white text-sm truncate">
                           {thread.name || thread.username}
                         </span>
-                        <span className="text-zinc-500 text-xs">
+                        <span className="text-zinc-500 text-xs truncate">
                           @{thread.username}
                         </span>
                       </div>
-                      <p className="text-zinc-200 text-sm leading-relaxed mb-2">
+                      <p className="text-zinc-200 text-sm leading-relaxed mb-2 break-words">
                         {thread.content}
                       </p>
 
                       {thread.image && (
-                        <div className="mb-3 max-w-sm">
+                        <div className="mb-3 w-full max-w-sm overflow-hidden rounded-xl">
                           <img
-                            src={`http://localhost:5000/uploads/${thread.image}`}
+                            src={`${thread.image}`}
                             alt="post"
                             className="w-full max-h-60 rounded-xl object-cover"
                             onError={(e) =>
@@ -207,10 +211,9 @@ export default function ProfileInfo({
                 </div>
               ))
             )}
-          </>
+          </div>
         )}
 
-        {/* TAB MEDIA */}
         {activeTab === "media" && (
           <>
             {threadsLoading ? (
@@ -222,7 +225,7 @@ export default function ProfileInfo({
                 Belum ada media.
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-[2px] mt-2">
+              <div className="grid grid-cols-3 gap-[2px] mt-2 -mx-4 md:mx-0">
                 {mediaThreads.map((thread) => (
                   <div
                     key={thread.id}
@@ -230,7 +233,7 @@ export default function ProfileInfo({
                     className="aspect-square overflow-hidden cursor-pointer hover:opacity-80 transition"
                   >
                     <img
-                      src={`http://localhost:5000/uploads/${thread.image}`}
+                      src={`${thread.image}`}
                       alt="media"
                       className="w-full h-full object-cover"
                       onError={(e) => (e.currentTarget.style.display = "none")}

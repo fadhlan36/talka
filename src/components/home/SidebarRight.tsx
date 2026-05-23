@@ -12,11 +12,12 @@ export const SidebarRight = () => {
 
   const handleFollow = async (userId: number) => {
     await followUser(userId);
-    removeFromSuggested(userId); // ← hilangkan dari list setelah follow
+    removeFromSuggested(userId);
   };
 
   return (
-    <aside className="w-[25%] sticky top-0 h-screen py-8 px-8 space-y-6 overflow-y-auto">
+    // Tambah hidden md:block dan sesuaikan lebar responsifnya
+    <aside className="hidden lg:block w-[28%] max-w-[360px] sticky top-0 h-screen py-8 px-6 space-y-6 overflow-y-auto shrink-0 border-l border-zinc-900">
       {/* MY PROFILE CARD */}
       <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 shadow-2xl">
         <h3 className="font-bold mb-4 text-sm text-blue-500 uppercase tracking-widest">
@@ -28,7 +29,7 @@ export const SidebarRight = () => {
             <img
               src={
                 user?.photo_profile
-                  ? `http://localhost:5000/uploads/${user.photo_profile}`
+                  ? `${import.meta.env.VITE_API_URL}/uploads/${user.photo_profile}`
                   : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username || "default"}`
               }
               alt="me"
@@ -41,10 +42,10 @@ export const SidebarRight = () => {
               ✨ {user?.full_name || "Guest User"} ✨
             </h4>
             <p className="text-zinc-500">@{user?.username || "username"}</p>
-            <p className="text-sm mt-3 text-zinc-300">
+            <p className="text-sm mt-3 text-zinc-300 truncate">
               {user?.bio || "No bio yet."}
             </p>
-            <div className="flex gap-6 mt-4 text-sm font-semibold">
+            <div className="flex gap-4 mt-4 text-xs font-semibold">
               <span>
                 <b className="text-white">{user?.following}</b> Following
               </span>
@@ -81,7 +82,6 @@ export const SidebarRight = () => {
                 key={u.id}
                 className="flex items-center justify-between gap-3"
               >
-                {/* Avatar + Info — klik navigasi ke profile */}
                 <div
                   className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
                   onClick={() => navigate(`/profile/${u.username}`)}
@@ -90,7 +90,7 @@ export const SidebarRight = () => {
                     <img
                       src={
                         u.avatar
-                          ? `http://localhost:5000/uploads/${u.avatar}`
+                          ? `${import.meta.env.VITE_API_URL}/uploads/${u.avatar}`
                           : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.username}`
                       }
                       alt={u.username}
@@ -107,7 +107,6 @@ export const SidebarRight = () => {
                   </div>
                 </div>
 
-                {/* Tombol Follow */}
                 <Button
                   onClick={() => handleFollow(u.id)}
                   className="rounded-full bg-white text-black hover:bg-zinc-200 text-xs px-4 h-8 shrink-0"

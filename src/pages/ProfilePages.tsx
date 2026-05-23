@@ -20,7 +20,7 @@ export default function ProfilePage() {
     null,
   );
 
-  // 🔥 cek apakah ini profile sendiri
+  //  cek apakah ini profile sendiri
   const isOwnProfile = useMemo(() => {
     if (!username) return true;
     if (!currentUser) return false;
@@ -30,7 +30,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!currentUser) return;
 
-    // 🔥 kalau profile sendiri, langsung pakai data user login
+    //  kalau profile sendiri, langsung pakai data user login
     if (isOwnProfile) {
       setProfileUser(currentUser);
       return;
@@ -42,7 +42,7 @@ export default function ProfilePage() {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          `http://localhost:5000/api/v1/user/${username}`,
+          `${import.meta.env.VITE_API_URL}/api/v1/user/${username}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -98,8 +98,8 @@ export default function ProfilePage() {
       {followTab && profileUser && currentUser && (
         <FollowModal
           type={followTab}
-          userId={profileUser.id} // 🔥 user yang sedang dilihat
-          currentUserId={currentUser.id} // 🔥 user login (WAJIB)
+          userId={profileUser.id} //  user yang sedang dilihat
+          currentUserId={currentUser.id} //  user login (WAJIB)
           onClose={() => setFollowTab(null)}
         />
       )}

@@ -18,7 +18,7 @@ export function useSuggested() {
         try {
             setLoading(true);
             const res = await axios.get(
-                "http://localhost:5000/api/v1/user/suggested",
+                `${import.meta.env.VITE_API_URL}/api/v1/user/suggested`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setSuggested(res.data.data);

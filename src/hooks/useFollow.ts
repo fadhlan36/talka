@@ -19,7 +19,7 @@ export function useFollow() {
         try {
             setLoading(true);
 
-            const res = await axios.get("http://localhost:5000/api/v1/follows", {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/follows`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -50,7 +50,7 @@ export function useFollow() {
     const checkIsFollowing = async (targetUserId: number) => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/api/v1/follows",
+                `${import.meta.env.VITE_API_URL}/api/v1/follows`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                     params: { type: "following" }
@@ -71,7 +71,7 @@ export function useFollow() {
             setFollowLoading(true);
 
             await axios.post(
-                "http://localhost:5000/api/v1/follows",
+                `${import.meta.env.VITE_API_URL}/api/v1/follows`,
                 { followed_user_id: userId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -100,7 +100,7 @@ export function useFollow() {
             setFollowLoading(true);
 
             await axios.delete(
-                "http://localhost:5000/api/v1/follows",
+                `${import.meta.env.VITE_API_URL}/api/v1/follows`,
                 {
                     data: { followed_id: userId },
                     headers: { Authorization: `Bearer ${token}` },

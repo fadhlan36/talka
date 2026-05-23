@@ -1,13 +1,13 @@
     import { useState, useEffect } from "react";
     import axios from "axios";
     import { useNavigate } from "react-router-dom";
-    import { io } from "socket.io-client";
+    // import { io } from "socket.io-client";
     import { useAppDispatch, useAppSelector } from "../store/hooks";
     import { initializeLikes, toggleLike, revertLike } from "../features/likes/likeSlice";
     import toast from "react-hot-toast";
 
     // Membuat koneksi realtime ke backend via WebSocket
-    const socket = io("http://localhost:5000");
+    // const socket = io(`${import.meta.env.VITE_API_URL}`);
 
     export function useThreads() {
         const navigate = useNavigate();
@@ -26,34 +26,36 @@
         const likedThreads = useAppSelector((state) => state.likes.likedThreads);
         const likeCounts = useAppSelector((state) => state.likes.likeCounts);
 
-        useEffect(() => {
-            // Mendengarkan event "newThread" dari server (realtime via socket)
-            socket.on("newThread", (newThreadFromSocket) => {
-                setThreads((prevThreads) => {
-                    // Cek duplikat sebelum menambahkan thread baru
-                    const exists = prevThreads.find(t => t.id === newThreadFromSocket.id);
-                    if (exists) return prevThreads;
-                    return [newThreadFromSocket, ...prevThreads]; // thread baru di paling atas
-                });
+        // useEffect(() => {
+        //     // Mendengarkan event "newThread" dari server (realtime via socket)
+        //     socket.on("newThread", (newThreadFromSocket) => {
+        //         setThreads((prevThreads) => {
+        //             // Cek duplikat sebelum menambahkan thread baru
+        //             const exists = prevThreads.find(t => t.id === newThreadFromSocket.id);
+        //             if (exists) return prevThreads;
+        //             return [newThreadFromSocket, ...prevThreads]; // thread baru di paling atas
+        //         });
 
-                // Checkpoint 1: Simpan data like thread baru ke Redux
-                dispatch(initializeLikes([{
-                    threadId: newThreadFromSocket.id,
-                    isLiked: newThreadFromSocket.isLiked ?? false,
-                    likeCount: newThreadFromSocket.likes ?? 0,
-                }]));
-            });
+        //         // Checkpoint 1: Simpan data like thread baru ke Redux
+        //         dispatch(initializeLikes([{
+        //             threadId: newThreadFromSocket.id,
+        //             isLiked: newThreadFromSocket.isLiked ?? false,
+        //             likeCount: newThreadFromSocket.likes ?? 0,
+        //         }]));
+        //     });
 
-            // Cleanup: hentikan listener saat komponen unmount
-            return () => { socket.off("newThread"); };
-        }, [dispatch]);
+        //     // Cleanup: hentikan listener saat komponen unmount
+        //     return () => { socket.off("newThread"); };
+        // }, [dispatch]);
 
         const fetchThreads = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:5000/api/v1/thread?limit=25", {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/thread?limit=25`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+
+                console.log(response.data);
 
                 const fetchedThreads = response.data;
                 setThreads(fetchedThreads); // simpan threads ke local state
@@ -85,7 +87,7 @@
                 formData.append("content", content);
                 if (image) formData.append("image", image);
 
-                await axios.post("http://localhost:5000/api/v1/thread", formData, {
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/thread`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
@@ -118,7 +120,7 @@
                 // Hit API ke database — backend menentukan apakah ini create atau delete like
                 // berdasarkan status like user saat ini di database
                 await axios.post(
-                    "http://localhost:5000/api/v1/thread/like",
+                    `${import.meta.env.VITE_API_URL}/api/v1/thread/like`,
                     { threadId },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );

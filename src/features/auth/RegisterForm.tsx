@@ -19,7 +19,7 @@ export default function RegisterForm() {
     setLoading(true);
     try {
       // Panggil API Register
-      await axios.post(`http://localhost:5000/api/v1/auth/register`, form);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/register`, form);
       alert("Registration success! Please login.");
       navigate("/login");
     } catch (err: any) {
