@@ -1,7 +1,9 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = `http://localhost:3000/api/v1/auth`;
+// 🔴 SEBELUMNYA: const API_URL = `http://localhost:3000/api/v1/auth`;
+// ✅ SEKARANG: Menggunakan env variable secara dinamis
+const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/auth`;
 
 // 1. LOGIN MANUAL (EMAIL & PASSWORD)
 export const loginAPI = async (userData: any) => {
